@@ -56,6 +56,7 @@ import FeatureView from './childComps/FeatureView';
 import {getHomeMultidata,getHomeGoods} from "network/home"; //获取数据的接口
 
 
+
 export default {
     
     name:'home',
@@ -75,7 +76,7 @@ export default {
         // this.getHomeGoods('new')
         // this.getHomeGoods('sell')
 
-        
+       
 
     },
     methods: {
@@ -86,18 +87,30 @@ export default {
             })
         },
         getHomeGoods(type){
-            console.log(this.goods[type].page);
             
-            let page = this.goods[type].page + 1
-            getHomeGoods(type,page).then(res=>{
+            console.log(this.goods[type].page);   
+        //     let page = this.goods[type].page + 1
+        //     getHomeGoods(type,page).then(res=>{
+        //         // this.goods[type].list.push(...res)
+        //         this.goods[type].list.push(...res.data.list)
+        //         this.goods[type].page + 1
+           
+        // })
+
+
+        getHomeGoods().then(res=>{
                 // this.goods[type].list.push(...res)
-                this.goods[type].list.push(...res.data.list)
+                this.goods[type].list.push(...res)
                 this.goods[type].page + 1
            
         })
-        
 
-        }
+
+        
+        
+    }
+  
+        
 
 
     },
@@ -109,9 +122,9 @@ export default {
             banners:[],
             recommends:[],
             goods:{
-                'pops':{page:0,list:[]},
-                'new':{page:0,list:[]},
-                'sell':{page:0,list:[]},  
+                'pop':{'page':0,list:[]},
+                'new':{'page':0,list:[]},
+                'sell':{'page':0,list:[]},  
             }
             
         }
