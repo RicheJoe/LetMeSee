@@ -6,6 +6,7 @@ const CateGory = () => import('../views/category/category.vue')
 const Cart = () => import('../views/cart/cart.vue')
 const Profile = () => import('../views/profile/profile.vue')
 //安装
+//测试gitgit 2222222
 Vue.use(VueRouter)
 
 const routes = [{
