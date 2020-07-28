@@ -5,40 +5,23 @@
         <home-swiper :banners="banners"></home-swiper>
         <recommend-view :recommends="recommends"></recommend-view>
         <feature-view></feature-view>
-        <tab-control :titles="['流行','新款','精选']" class="tab-control"></tab-control>
-
+        <tab-control :titles="['流行','新款','精选']" class="tab-control"
+        @tabClick="tabClick"
+        ></tab-control>
+        <goods-list :goods="showGoods" />
         <ul>
-            <li>1test1</li>
-            <li>2test1</li>
-            <li>3test1</li>
-            <li>4test1</li>
-            <li>5test1</li>
-            <li>6test1</li>
-            <li>7test1</li>
-            <li>8test1</li>
-            <li>9test1</li>
-            <li>10test1</li>
-            <li>11test1</li>
-            <li>12test1</li>
-            <li>13test1</li>
-            <li>14test1</li>
-            <li>15test1</li>
-            <li>16test1</li>
-            <li>17test1</li>
-            <li>18test1</li>
-            <li>19test1</li>
-            <li>20test1</li>
-            <li>21test1</li>
-            <li>22test1</li>
-            <li>23test1</li>
-            <li>24test1</li>
-            <li>25test1</li>
-            <li>26test1</li>
-            <li>27test1</li>
-            <li>28test1</li>
-            <li>29test1</li>
-            <li>30test1</li>
+            <li>aaa1</li>
+            <li>aaa2</li>
+            <li>aaa3</li>
+            <li>aaa4</li>
+            <li>aaa5</li>
+            <li>aaa6</li>
+            <li>aaa7</li>
+            <li>aaa8</li>
+            <li>aaa9</li>
+            <li>aaa10</li>
         </ul>
+       
         
 
     </div>
@@ -47,6 +30,7 @@
 <script>
 import NavBar from "components/common/navbar/NavBar";
 import tabControl from 'components/content/tabControl/tabControl';
+import GoodsList from 'components/content/goods/GoodsList'
 
 import HomeSwiper from "./childComps/homeSwiper";
 import RecommendView from "./childComps/RecommendView";
@@ -65,7 +49,8 @@ export default {
         HomeSwiper,
         RecommendView,
         FeatureView,
-        tabControl
+        tabControl,
+        GoodsList
        
     },
     //组件初始化完成之后调用  
@@ -73,13 +58,32 @@ export default {
         //请求多数据数据  
         this.getHomeMultidata(),
         this.getHomeGoods('pop')
-        // this.getHomeGoods('new')
-        // this.getHomeGoods('sell')
+        this.getHomeGoods('new')
+        this.getHomeGoods('sell')
 
        
 
     },
     methods: {
+        //事件监听方法
+        tabClick(index){
+            //console.log(index)
+            switch (index){
+                case 0:
+                    this.currentType='pop'
+                    break
+                case 1:
+                    this.currentType='new'
+                    break
+                case 2:
+                    this.currentType='sell'
+                    break     
+
+            }
+            
+        },
+
+        //网络请求方法
         getHomeMultidata(){
         getHomeMultidata().then(res=>{
             this.banners=res.data.banner.list
@@ -88,22 +92,17 @@ export default {
         },
         getHomeGoods(type){
             
-            console.log(this.goods[type].page);   
-        //     let page = this.goods[type].page + 1
-        //     getHomeGoods(type,page).then(res=>{
-        //         // this.goods[type].list.push(...res)
-        //         this.goods[type].list.push(...res.data.list)
-        //         this.goods[type].page + 1
-           
-        // })
-
-
-        getHomeGoods().then(res=>{
-                // this.goods[type].list.push(...res)
-                this.goods[type].list.push(...res)
+            
+            let page = this.goods[type].page + 1
+            getHomeGoods(type,page).then(res=>{
+                //console.log(res)
+                this.goods[type].list.push(...res.data.list)
                 this.goods[type].page + 1
            
         })
+
+
+     
 
 
         
@@ -115,6 +114,9 @@ export default {
 
     },
     computed: {
+        showGoods(){
+            return this.goods[this.currentType].list
+        }
 
     },
     data() {
@@ -125,7 +127,8 @@ export default {
                 'pop':{'page':0,list:[]},
                 'new':{'page':0,list:[]},
                 'sell':{'page':0,list:[]},  
-            }
+            },
+            currentType:'pop'
             
         }
     },
@@ -162,7 +165,8 @@ export default {
 .tab-control{
     /* 吸顶效果 和导航高一样即可 */
     position: sticky;    
-    top: 44px
+    top: 44px;
+    z-index: 9;
 }
 
 </style>

@@ -6,26 +6,26 @@ export function getHomeMultidata(){
     })
 }
 
-// export function getHomeGoods(type,page){
-//     return request({
-//     //   baseURL: 'localhost:3000',
-//       url: './home/data',
-//       params:{
-//           type,page
-//       }
-//     })
-
-// }
-
-
-export function getHomeGoods() {
+export function getHomeGoods(type,page){
     return request({
-        //baseURL: 'file:///F:/jq%20easyui案例/虚拟键盘/',
-        url: '/home/data',
-        // params: {
-        //     type, page
-        // }
+       baseURL: 'http://152.136.185.210:8000/api/n3',
+      url: './home/data',
+      params:{
+          type,page
+      }
     })
 
 }
+
+
+// export function getHomeGoods() {
+//     return request({
+//         //baseURL: 'file:///F:/jq%20easyui案例/虚拟键盘/',
+//         url: '/home/data',
+//         // params: {
+//         //     type, page
+//         // }
+//     })
+
+// }
 
