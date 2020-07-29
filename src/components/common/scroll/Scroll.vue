@@ -16,8 +16,8 @@ export default {
         }
     },
     mounted(){
-        this.scroll=new BScroll(this.$refs.wrapper,{})
-        console.log(this.scroll)  
+        this.scroll=new BScroll(this.$refs.wrapper,{ click: true})
+        //console.log(this.scroll)  
 
     }
     
