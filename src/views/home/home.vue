@@ -1,27 +1,22 @@
 <template>
     <!-- <h2>首页</h2> -->
     <div id='home'>
-        <nav-bar class="home-nav"><div slot ='center'>购物街</div></nav-bar>
-        <home-swiper :banners="banners"></home-swiper>
-        <recommend-view :recommends="recommends"></recommend-view>
-        <feature-view></feature-view>
-        <tab-control :titles="['流行','新款','精选']" class="tab-control"
-        @tabClick="tabClick"
-        ></tab-control>
-        <goods-list :goods="showGoods" />
-        <ul>
-            <li>aaa1</li>
-            <li>aaa2</li>
-            <li>aaa3</li>
-            <li>aaa4</li>
-            <li>aaa5</li>
-            <li>aaa6</li>
-            <li>aaa7</li>
-            <li>aaa8</li>
-            <li>aaa9</li>
-            <li>aaa10</li>
-            <li>aaa10</li>
-        </ul>
+        <nav-bar class="home-nav">
+            <div slot ='center'>购物街</div>
+        </nav-bar>
+
+       <Scroll class="content">
+            <home-swiper :banners="banners"></home-swiper>
+            <recommend-view :recommends="recommends"></recommend-view>
+            <feature-view></feature-view>
+            <tab-control :titles="['流行','新款','精选']" class="tab-control"
+            @tabClick="tabClick"
+            ></tab-control>
+            <goods-list :goods="showGoods" />
+       </Scroll>
+
+
+        
        
         
 
@@ -32,6 +27,7 @@
 import NavBar from "components/common/navbar/NavBar";
 import tabControl from 'components/content/tabControl/tabControl';
 import GoodsList from 'components/content/goods/GoodsList'
+import Scroll from 'components/common/scroll/Scroll';
 
 import HomeSwiper from "./childComps/homeSwiper";
 import RecommendView from "./childComps/RecommendView";
@@ -51,7 +47,8 @@ export default {
         RecommendView,
         FeatureView,
         tabControl,
-        GoodsList
+        GoodsList,
+        Scroll
        
     },
     //组件初始化完成之后调用  
@@ -91,9 +88,7 @@ export default {
             this.recommends=res.data.recommend.list     
             })
         },
-        getHomeGoods(type){
-            
-            
+        getHomeGoods(type){               
             let page = this.goods[type].page + 1
             getHomeGoods(type,page).then(res=>{
                 //console.log(res)
@@ -149,7 +144,11 @@ export default {
 </script>
 
 <style >
-
+#home{
+    padding-top: 44px;
+    height: 100vh;
+    position: relative;
+}
 .home-nav {
     background-color: var(--color-tint);
     color: white;
@@ -159,9 +158,7 @@ export default {
     top: 0;
     z-index: 10;
 }
-#home{
-    padding-top: 44px
-}
+
 
 .tab-control{
     /* 吸顶效果 和导航高一样即可 */
@@ -169,5 +166,16 @@ export default {
     top: 44px;
     z-index: 9;
 }
+.content{
+    position: absolute;
+    overflow: hidden;
+    
+    top: 44px;
+    bottom: 28px;
+    left: 0px;
+    right: 0px;
+}
+
+
 
 </style>
