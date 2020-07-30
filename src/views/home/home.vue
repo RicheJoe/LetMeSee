@@ -5,7 +5,11 @@
             <div slot ='center'>购物街</div>
         </nav-bar>
 
-       <Scroll class="content">
+       <Scroll class="content" ref="scroll" :probeType=3
+        @scroll="contentScroll" :pull-up-load="true"
+        @pullingUp="pullingUpLoad" >
+
+
             <home-swiper :banners="banners"></home-swiper>
             <recommend-view :recommends="recommends"></recommend-view>
             <feature-view></feature-view>
@@ -14,6 +18,7 @@
             ></tab-control>
             <goods-list :goods="showGoods" />
        </Scroll>
+       <back-top class="backtop" @click.native="backtopClick"  v-show="isShowBacktop"/>
 
 
         
@@ -28,6 +33,7 @@ import NavBar from "components/common/navbar/NavBar";
 import tabControl from 'components/content/tabControl/tabControl';
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll';
+import BackTop from 'components/content/backtop/BackTop';
 
 import HomeSwiper from "./childComps/homeSwiper";
 import RecommendView from "./childComps/RecommendView";
@@ -48,7 +54,8 @@ export default {
         FeatureView,
         tabControl,
         GoodsList,
-        Scroll
+        Scroll,
+        BackTop
        
     },
     //组件初始化完成之后调用  
@@ -64,6 +71,8 @@ export default {
     },
     methods: {
         //事件监听方法
+
+        //1、导航监听
         tabClick(index){
             //console.log(index)
             switch (index){
@@ -80,6 +89,28 @@ export default {
             }
             
         },
+        
+
+        //2、滚动监听  实现返回顶部按钮显示与否
+        contentScroll(position){
+            this.isShowBacktop=-position.y>1000
+
+        },
+
+
+        //3、返回顶部按钮监听
+        backtopClick(){
+            this.$refs.scroll.scrollToUp(0,0,500)
+        },
+        
+        //3、上拉加载更多
+        pullingUpLoad(){
+            this.getHomeGoods(this.currentType);
+            //手动刷新bscroll  防止滑动失效
+            this.$refs.scroll.scroll.refresh()
+
+
+        },
 
         //网络请求方法
         getHomeMultidata(){
@@ -93,7 +124,10 @@ export default {
             getHomeGoods(type,page).then(res=>{
                 //console.log(res)
                 this.goods[type].list.push(...res.data.list)
-                this.goods[type].page + 1
+                this.goods[type].page + 1;
+                //再次加载
+                this.$refs.scroll.finishPullUp()
+            
            
         })
 
@@ -124,7 +158,8 @@ export default {
                 'new':{'page':0,list:[]},
                 'sell':{'page':0,list:[]},  
             },
-            currentType:'pop'
+            currentType:'pop',
+            isShowBacktop:false
             
         }
     },
@@ -143,7 +178,7 @@ export default {
 }
 </script>
 
-<style >
+<style scoped >
 #home{
     padding-top: 44px;
     height: 100vh;
@@ -174,6 +209,12 @@ export default {
     bottom: 28px;
     left: 0px;
     right: 0px;
+}
+.backtop{
+    z-index: 999;
+    position: fixed;
+    right: 10px;
+    bottom: 44px ; 
 }
 
 
