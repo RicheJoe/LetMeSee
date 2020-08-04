@@ -65,11 +65,30 @@ export default {
         this.getHomeGoods('pop')
         this.getHomeGoods('new')
         this.getHomeGoods('sell')
-
        
+    },
+    mounted (){
+       
+        const refresh = this.debounce( this.$refs.scroll.refresh,100)
+            //监听图片加载
+        this.$bus.$on('itemImageload',()=>{
+           
+            refresh()
+            
+        })
 
     },
     methods: {
+        //防抖函数封装
+        debounce(func,delay){
+            let timer = null;
+            return function(...args){
+                if(timer) clearTimeout(timer)
+                timer = setTimeout(()=>{
+                    func.apply(this,args)
+                },delay)
+            }
+        },
         //事件监听方法
 
         //1、导航监听
@@ -166,9 +185,7 @@ export default {
     watch: {
 
     },
-    mounted() {
 
-    },
     props: {
 
     },

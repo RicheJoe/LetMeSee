@@ -1,6 +1,6 @@
 <template>
     <div class="goods-item">
-        <img :src="goodsItem.show.img" alt="">
+        <img :src="goodsItem.show.img" alt="" @load="imageload">
         <div class="goods-info">
             <p>{{goodsItem.title}}</p>
             <span class="price">{{goodsItem.price}}</span>
@@ -21,6 +21,12 @@ export default {
                 return {}
             }
         }
+    },
+    methods:{
+      imageload(){
+        //console.log('imageload');图片加载后调用
+        this.$bus.$emit('itemImageload')
+      }
     }
 }
 </script>

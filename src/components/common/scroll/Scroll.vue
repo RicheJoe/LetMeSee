@@ -43,17 +43,23 @@ export default {
         this.scroll.on('pullingUp',()=>{
             this.$emit('pullingUp')
         })
+        
 
 
     },
     methods:{
         //返回顶部封装
         scrollToUp (x,y,time=500) {
-            this.scroll.scrollTo(x,y,time)
+            this.scroll && this.scroll.scrollTo(x,y,time)
         },
         //下拉完成继续加载
         finishPullUp(){
             this.scroll.finishPullUp()
+        },
+        refresh(){
+           console.log('=====');
+            this.scroll && this.scroll.refresh()
+            
         }
 
     }
