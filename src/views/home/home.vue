@@ -4,17 +4,19 @@
         <nav-bar class="home-nav">
             <div slot ='center'>购物街</div>
         </nav-bar>
+        <tab-control :titles="['流行','新款','精选']" 
+            @tabClick="tabClick" ref="tabControl1" class="tab-control"
+            v-show="isTabFixed"
+            ></tab-control>
 
        <Scroll class="content" ref="scroll" :probeType=3
         @scroll="contentScroll" :pull-up-load="true"
         @pullingUp="pullingUpLoad" >
-
-
-            <home-swiper :banners="banners"></home-swiper>
+            <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></home-swiper>
             <recommend-view :recommends="recommends"></recommend-view>
             <feature-view></feature-view>
-            <tab-control :titles="['流行','新款','精选']" class="tab-control"
-            @tabClick="tabClick"
+            <tab-control :titles="['流行','新款','精选']" 
+            @tabClick="tabClick" ref="tabControl2" 
             ></tab-control>
             <goods-list :goods="showGoods" />
        </Scroll>
@@ -41,7 +43,7 @@ import FeatureView from './childComps/FeatureView';
 
 
 import {getHomeMultidata,getHomeGoods} from "network/home"; //获取数据的接口
-
+import {debounce} from 'common/utils';
 
 
 export default {
@@ -58,6 +60,24 @@ export default {
         BackTop
        
     },
+    data() {
+        return{
+            banners:[],
+            recommends:[],
+            goods:{
+                'pop':{'page':0,list:[]},
+                'new':{'page':0,list:[]},
+                'sell':{'page':0,list:[]},  
+            },
+            currentType:'pop',
+            isShowBacktop:false,
+            tabOffsetTop: 0,
+            isTabFixed: false,
+            saveY:0
+
+            
+        }
+    },
     //组件初始化完成之后调用  
     created() {
         //请求多数据数据  
@@ -69,26 +89,17 @@ export default {
     },
     mounted (){
        
-        const refresh = this.debounce( this.$refs.scroll.refresh,100)
+        const refresh = debounce( this.$refs.scroll.refresh,100)
             //监听图片加载
         this.$bus.$on('itemImageload',()=>{
-           
-            refresh()
-            
+            refresh()   
         })
-
+        //获取tabcontrol的相对屏幕顶部位置y
+        
+        
     },
     methods: {
-        //防抖函数封装
-        debounce(func,delay){
-            let timer = null;
-            return function(...args){
-                if(timer) clearTimeout(timer)
-                timer = setTimeout(()=>{
-                    func.apply(this,args)
-                },delay)
-            }
-        },
+        
         //事件监听方法
 
         //1、导航监听
@@ -106,13 +117,18 @@ export default {
                     break     
 
             }
+            this.$refs.tabControl1.currentIndex = index;
+            this.$refs.tabControl2.currentIndex = index;
             
         },
         
 
         //2、滚动监听  实现返回顶部按钮显示与否
         contentScroll(position){
+            //1、判断backtop按钮是否显示
             this.isShowBacktop=-position.y>1000
+            //2、判断tabcontrol是否吸顶
+            this.isTabFixed = (-position.y)>this.tabOffsetTop
 
         },
 
@@ -129,6 +145,12 @@ export default {
             this.$refs.scroll.scroll.refresh()
 
 
+        },
+
+        //4、图片加载完成 
+        swiperImageLoad(){
+            this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+            //console.log(this.tabOffsetTop);
         },
 
         //网络请求方法
@@ -168,20 +190,7 @@ export default {
         }
 
     },
-    data() {
-        return{
-            banners:[],
-            recommends:[],
-            goods:{
-                'pop':{'page':0,list:[]},
-                'new':{'page':0,list:[]},
-                'sell':{'page':0,list:[]},  
-            },
-            currentType:'pop',
-            isShowBacktop:false
-            
-        }
-    },
+    
     watch: {
 
     },
@@ -189,8 +198,14 @@ export default {
     props: {
 
     },
-    destroyed() {
-
+    activated(){
+       this.$refs.scroll.scrollToUp(0,this.saveY,0);//进入页面后到之前离开的纵坐标
+    },
+    deactivated(){
+        this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
+    }, 
+    destroyed() { 
+       
     },
 }
 </script>
@@ -210,14 +225,12 @@ export default {
     top: 0;
     z-index: 10;
 }
-
-
 .tab-control{
-    /* 吸顶效果 和导航高一样即可 */
-    position: sticky;    
-    top: 44px;
+    position: relative;
     z-index: 9;
 }
+
+
 .content{
     position: absolute;
     overflow: hidden;
