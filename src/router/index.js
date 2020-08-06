@@ -5,8 +5,9 @@ const Home = () => import('../views/home/home.vue')
 const CateGory = () => import('../views/category/category.vue')
 const Cart = () => import('../views/cart/cart.vue')
 const Profile = () => import('../views/profile/profile.vue')
+const Detail = () => import('../views/detail/Detail.vue')
+
 //安装
-//测试gitgit 2222222
 Vue.use(VueRouter)
 
 const routes = [{
@@ -28,6 +29,10 @@ const routes = [{
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/detail/:iid',
+    component: Detail
   },
 ]
 //创建
