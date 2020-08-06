@@ -199,10 +199,15 @@ export default {
 
     },
     activated(){
-       this.$refs.scroll.scrollToUp(0,this.saveY,0);//进入页面后到之前离开的纵坐标
+     this.$refs.scroll.scrollToUp(0,this.saveY,0);//进入页面后到之前离开的纵坐标
+        // this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
+        this.$refs.scroll.scroll.refresh()
     },
     deactivated(){
+          //
         this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
+         
+
     }, 
     destroyed() { 
        
