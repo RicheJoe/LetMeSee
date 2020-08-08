@@ -22,12 +22,14 @@ export default {
     },
     data(){
         return {
-            scroll:null,
+            scroll:{},
           
 
         }
     },
     mounted(){
+
+        //   setTimeout(this.__initScroll, 10)
         //创建Bscroll
         this.scroll=new BScroll(this.$refs.wrapper,{ 
             click: true,
@@ -56,8 +58,26 @@ export default {
 
     },
     methods:{
+    //     __initScroll() {
+	// 	    // 1.初始化BScroll对象
+	// 	    if (!this.$refs.wrapper) return
+    //     this.scroll = new BScroll(this.$refs.wrapper, {
+    //       probeType: this.probeType,
+    //       click: true,
+    //       pullUpLoad: this.pullUpLoad
+    //     })
+    //     // 2.将监听事件回调
+    //     this.scroll.on('scroll', pos => {
+    //       this.$emit('scroll', pos)
+    //     })
+    //     // 3.监听上拉到底部
+    //     this.scroll.on('pullingUp', () => {
+    //       //console.log('上拉加载');
+    //       this.$emit('pullingUp')
+    //     })
+    //   },
         //返回顶部封装
-        scrollToUp (x,y,time=500) {
+        scrollTo (x,y,time) {
             this.scroll && this.scroll.scrollTo(x,y,time)
         },
         //下拉完成继续加载
@@ -75,6 +95,11 @@ export default {
             return this.scroll ? this.scroll.y : 0
         }
 
+    },
+    watch:{
+        data() {
+        setTimeout(this.refresh, 20)
+      }
     }
     
 }

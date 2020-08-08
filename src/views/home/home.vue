@@ -135,7 +135,7 @@ export default {
 
         //3、返回顶部按钮监听
         backtopClick(){
-            this.$refs.scroll.scrollToUp(0,0,500)
+           this.$refs.scroll.scrollTo(0,0,500)
         },
         
         //3、上拉加载更多
@@ -199,17 +199,17 @@ export default {
 
     },
     activated(){
-     this.$refs.scroll.scrollToUp(0,this.saveY,0);//进入页面后到之前离开的纵坐标
-        // this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
-        this.$refs.scroll.scroll.refresh()
+        //console.log("activated");
+        
+        this.$refs.scroll.scrollTo(0,this.saveY,-100);//进入页面后到之前离开的纵坐标
+        this.$refs.scroll.refresh()
     },
     deactivated(){
-          //
-        this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
-         
-
+            this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
+            //console.log("deactivated");
     }, 
     destroyed() { 
+        
        
     },
 }
