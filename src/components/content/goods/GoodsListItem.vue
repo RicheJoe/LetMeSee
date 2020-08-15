@@ -1,6 +1,6 @@
 <template>
     <div class="goods-item" @click="itemclick">
-        <img :src="goodsItem.show.img" alt="" @load="imageload">
+        <img :src="showImage" alt="" @load="imageload">
         <div class="goods-info">
             <p>{{goodsItem.title}}</p>
             <span class="price">{{goodsItem.price}}</span>
@@ -31,6 +31,11 @@ export default {
         //console.log('图片点击');跳转到详情页并 把 商品id传过去
         //如果永query传递  放一个对象{path:'xxx',query{iid:'xxx'}}
         this.$router.push("/detail/"+this.goodsItem.iid)
+      }
+    },
+    computed:{
+      showImage(){
+        return this.goodsItem.image || this.goodsItem.show.img
       }
     }
 }

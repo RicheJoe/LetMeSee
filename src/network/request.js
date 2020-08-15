@@ -1,5 +1,6 @@
 import axios from 'axios';
-
+import Vue from 'vue'; //引入vue
+let vm = new Vue();
 export function request(config) {
     //1.创建axioxs实例
     const instance222 = axios.create({
@@ -19,7 +20,12 @@ export function request(config) {
     instance222.interceptors.response.use(res =>{
         return res.data
     },err =>{
-        //console.log(err);
+        console.log(err);
+        vm.$message({
+            showClose: true,
+            message: '服务器繁忙',
+            type: 'warning'
+            });
     })
 
 

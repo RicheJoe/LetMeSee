@@ -44,6 +44,8 @@ import FeatureView from './childComps/FeatureView';
 
 import {getHomeMultidata,getHomeGoods} from "network/home"; //获取数据的接口
 import {debounce} from 'common/utils';
+import {itemListenerMaxin} from 'common/mixin'
+
 
 
 export default {
@@ -60,6 +62,7 @@ export default {
         BackTop
        
     },
+    mixins:[itemListenerMaxin],
     data() {
         return{
             banners:[],
@@ -73,7 +76,8 @@ export default {
             isShowBacktop:false,
             tabOffsetTop: 0,
             isTabFixed: false,
-            saveY:0
+            saveY:0,
+            
 
             
         }
@@ -87,16 +91,14 @@ export default {
         this.getHomeGoods('sell')
        
     },
-    mounted (){
-       
-        const refresh = debounce( this.$refs.scroll.refresh,100)
-            //监听图片加载
-        this.$bus.$on('itemImageload',()=>{
-            refresh()   
-        })
-        //获取tabcontrol的相对屏幕顶部位置y
-        
-        
+    mounted (){     
+        //使用混入就不用写下方代码  直接引入即可
+
+        // const refresh = debounce( this.$refs.scroll.refresh,100)
+        // this.ItemImgListener=()=>{
+        //     refresh()   
+        // }
+        // this.$bus.$on('itemImageload', this.ItemImgListener)     
     },
     methods: {
         
@@ -158,31 +160,31 @@ export default {
         getHomeMultidata().then(res=>{
             this.banners=res.data.banner.list
             this.recommends=res.data.recommend.list     
+            }).catch(err=>{
+                console.log("服务器繁忙");
             })
         },
         getHomeGoods(type){               
             let page = this.goods[type].page + 1
             getHomeGoods(type,page).then(res=>{
-                //console.log(res)
                 this.goods[type].list.push(...res.data.list)
                 this.goods[type].page + 1;
                 //再次加载
                 this.$refs.scroll.finishPullUp()
-            
-           
-        })
-
-
-     
-
-
-        
-        
-    }
-  
-        
-
-
+            }).catch(err=>{
+                //抽取放在了request的拦截器里面
+                // let self = this;
+                // //服务器繁忙是提示
+                // function warnMessage(){
+                //     self.$message({
+                //     showClose: true,
+                //     message: '服务器繁忙',
+                //     type: 'warning'
+                //     });
+                // };
+                //  const warning = debounce(warnMessage(),500)
+            })
+        },
     },
     computed: {
         showGoods(){
@@ -205,8 +207,13 @@ export default {
         this.$refs.scroll.refresh()
     },
     deactivated(){
-            this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
             //console.log("deactivated");
+            //保存y值
+            this.saveY =  this.$refs.scroll.getscrollY()//记录离开当前页面的纵坐标
+            //取消全局事件监听
+            this.$bus.$off('itemImageload', this.ItemImgListener)
+            
+
     }, 
     destroyed() { 
         

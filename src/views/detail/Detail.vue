@@ -2,12 +2,13 @@
     <div id="detail">
        <DetailNavBar class="datail-nav" />
        <Scroll class="content"  :probeType=3 :pull-up-load="true" ref="scroll">
-       <DetailSwiper :topImages="topImages"/>
-       <DetailBaseInfo :goods="goods"></DetailBaseInfo>
-       <DetailShopInfo :shop="shop"></DetailShopInfo>
-       <DetailImageInfo :detailInfo="detailInfo" @imageLoad="imageLoad"/>
-       <DetailParamInfo :paramInfo="paramInfo"/>
-       <DetailCommentInfo :commentInfo="commentInfo"/>
+            <DetailSwiper :topImages="topImages"/>
+            <DetailBaseInfo :goods="goods"></DetailBaseInfo>
+            <DetailShopInfo :shop="shop"></DetailShopInfo>
+            <DetailImageInfo :detailInfo="detailInfo" @imageLoad="imageLoad"/>
+            <DetailParamInfo :paramInfo="paramInfo"/>
+            <DetailCommentInfo :commentInfo="commentInfo"/>
+            <GoodsList :goods="recommends"/>
        </Scroll>
     </div>
   
@@ -22,9 +23,12 @@ import DetailImageInfo from './childComps/DetailImageInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailCommentInfo from './childComps/DetailCommentInfo'
 
-import Scroll from 'components/common/scroll/Scroll';
+import Scroll from 'components/common/scroll/Scroll'
+import GoodsList from 'components/content/goods/GoodsList'
 
-import {getDetail,GoodsInfo,Shop,GoodsParam }  from "network/detail.js"
+import {getDetail,GoodsInfo,Shop,GoodsParam ,getRecommend}  from "network/detail.js"
+import {debounce} from 'common/utils';
+import {itemListenerMaxin} from 'common/mixin'
 
 export default {
     name: "Detail",
@@ -36,9 +40,12 @@ export default {
             shop:{},
             detailInfo:{},
             paramInfo:{},
-            commentInfo:{}
+            commentInfo:{},
+            recommends:[],
+           
         }
     },
+    mixins:[itemListenerMaxin],
     components:{
         DetailNavBar,
         DetailSwiper,
@@ -47,7 +54,8 @@ export default {
         Scroll,
         DetailImageInfo,
         DetailParamInfo,
-        DetailCommentInfo
+        DetailCommentInfo,
+        GoodsList
     },
     created(){
         //保存传递来的参数iid
@@ -56,7 +64,7 @@ export default {
         getDetail(this.iid).then(res=>{
            
            const data = res.result
-           console.log(data);
+           //console.log(data);
            //获取上方图片信息--轮播图
            this.topImages=data.itemInfo.topImages
            //获取商品详情
@@ -71,12 +79,29 @@ export default {
            if(data.rate.cRate  !==0){
             this.commentInfo =data.rate.list[0]
            }
+        });
+
+        //获取详情也推荐数据
+        getRecommend().then(res=>{
+            //console.log(res);
+            this.recommends=res.data.list
         })
     },
     methods:{
         imageLoad(){
             this.$refs.scroll.refresh()
         }
+    },
+    mounted(){
+        // const refresh = debounce( this.$refs.scroll.refresh,100);
+        // this.ItemImgListener=()=>{
+        //     refresh()   
+        // }
+        // this.$bus.$on('itemImageload', this.ItemImgListener)
+    },
+    destroyed(){
+         this.$bus.$off('itemImageload', this.ItemImgListener)
+            
     }
 
 }

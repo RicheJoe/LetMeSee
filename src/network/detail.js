@@ -45,3 +45,14 @@ export class Shop {
       this.sizes = rule.tables;
     }
   }
+
+  //获取详情页下方推荐数据信息
+  export function getRecommend(){
+    return request({
+        baseURL: 'http://152.136.185.210:8000/api/z8',
+        url:"/recommend",
+        params:{
+           
+        }
+    })
+}
