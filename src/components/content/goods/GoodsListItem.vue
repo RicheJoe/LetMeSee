@@ -60,6 +60,7 @@ export default {
     right: 0;
     overflow: hidden;
     text-align: center;
+    padding: 0px;
   }
   .goods-info p {
     overflow: hidden;
