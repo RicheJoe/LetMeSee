@@ -24,7 +24,8 @@ export function request(config) {
         vm.$message({
             showClose: true,
             message: '服务器繁忙',
-            type: 'warning'
+            type: 'warning',
+            duration:2000,
             });
     })
 
@@ -35,5 +36,7 @@ export function request(config) {
 
   
 }
+
+
 
 

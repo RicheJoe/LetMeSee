@@ -11,6 +11,8 @@
             <DetailCommentInfo :commentInfo="commentInfo" ref="commentInfo"/>
             <GoodsList :goods="recommends" ref="recommend"/>
        </Scroll>
+       <DatailBottomBar @addCart="addToCart"/>
+       <back-top class="backtop" @click.native="backtopClick"  v-show="isShowBacktop"/>
     </div>
   
 </template>
@@ -23,9 +25,11 @@ import DetailShopInfo from './childComps/DetailShopInfo'
 import DetailImageInfo from './childComps/DetailImageInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailCommentInfo from './childComps/DetailCommentInfo'
+import DatailBottomBar from './childComps/DetailBottomBar'
 
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/goods/GoodsList'
+import BackTop from 'components/content/backtop/BackTop';
 
 import {getDetail,GoodsInfo,Shop,GoodsParam ,getRecommend}  from "network/detail.js"
 import {debounce} from 'common/utils';
@@ -44,7 +48,8 @@ export default {
             commentInfo:{},
             recommends:[],
             themeTopYs:[0,0,0,0],//各个主题菜单的高度y   
-            currentIndex:0
+            currentIndex:0,
+            isShowBacktop:false
         }
     },
     mixins:[itemListenerMaxin],
@@ -57,7 +62,9 @@ export default {
         DetailImageInfo,
         DetailParamInfo,
         DetailCommentInfo,
-        GoodsList
+        GoodsList,
+        DatailBottomBar,
+        BackTop
     },
     created(){
         //保存传递来的参数iid
@@ -108,7 +115,7 @@ export default {
         imageLoad(){
             this.$refs.scroll.refresh()
 
-            //到数据后渲染结束  获取对应dom的高度以供点击菜单跳转对应高度使用
+            //到数据后渲染结束 $el 获取对应dom的高度以供点击菜单跳转对应高度使用
             this.themeTopYs=[];
                 this.themeTopYs.push(0);
                 this.themeTopYs.push(this.$refs.params.$el.offsetTop-44);
@@ -123,6 +130,10 @@ export default {
 
         //获取scroll发射的位置事件
         contentScroll(position){
+             //1、判断backtop按钮是否显示
+            this.isShowBacktop=-position.y>1000
+
+
             //console.log(position);
             //获取Y值
             const positionY = -position.y
@@ -135,17 +146,44 @@ export default {
                 //但是这个值是动态获取的
             let length= this.themeTopYs.length
             for(let i = 0;i<length;i++){
+
+                //判断方法一  多语句判断
                 //if(()||())两个判断语句
                 if(this.currentIndex !== i &&
-                    ((i<length-1&&positionY>=this.themeTopYs[i]&& positionY < this.themeTopYs[i+1])
-                    ||(i===length-1&&positionY>=this.themeTopYs[i]))
+                    ((i < length-1 && positionY >= this.themeTopYs[i]&& positionY < this.themeTopYs[i+1])
+                    ||(i===length-1 && positionY>=this.themeTopYs[i]))
                 ){
                     this.currentIndex=i;
                     //console.log(this.currentIndex);
                     this.$refs.nav.currentIndex=this.currentIndex
                 }
-            }
 
+                //判断方法二 给原来的数组一个最大值 最后增加一个  push(number.max_value)
+                //改变最后一个值的判断条件 让他也有区间判断
+                //判断语句positionY >= this.themeTopYs[i]&& positionY < this.themeTopYs[i+1]
+                //循环语句  i<length-1
+            }
+            
+            
+
+        },
+        backtopClick(){
+           this.$refs.scroll.scrollTo(0,0,500)
+        },
+        //监听加入购物车点击事件
+        addToCart(){
+            //获取商品信息  购物车需要的  图片+标题+描述+价格
+            const product = {};
+            product.image=this.topImages[0];
+            product.title=this.goods.title;
+            product.desc=this.goods.desc;
+            product.price=this.goods.realPrice;
+            product.iid=this.iid
+            //console.log(product);
+
+            //添加到购物车 使用vuex保存数据
+            //this.$store.commit('addCart',product)
+            this.$store.dispatch('addCart',product)
         }
     },
     mounted(){
@@ -177,9 +215,15 @@ export default {
     background-color: #fff;
 }
 .content{
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 49px);
     
     
+}
+.backtop{
+    z-index: 999;
+    position: fixed;
+    right: 10px;
+    bottom: 44px ; 
 }
 
 </style>

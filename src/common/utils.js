@@ -1,4 +1,4 @@
- //防抖函数封装
+//防抖函数封装
 export function 
 debounce(func,delay){
     let timer = null;
@@ -8,6 +8,18 @@ debounce(func,delay){
             func.apply(this,args)
         },delay)
     }
+}
+//节流
+export function 
+throttle(func,delay){
+  let lasttime = 0;
+  return function(...args){
+    let nowdate = new Date();
+    if(nowdate - lasttime >delay){
+      func.apply(this,args);
+      lasttime = nowdate
+    }
+  }
 }
 
 
