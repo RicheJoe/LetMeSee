@@ -6,7 +6,8 @@
 
     <!-- 商品列表 -->
     <Scroll class="content" ref='scroll'>
-        <CartList />
+        <!-- <CartList /> -->
+        <CartListDemo/>
     </Scroll>
 
     <!-- 底部汇总价格 -->
@@ -20,6 +21,7 @@ import Scroll from 'components/common/scroll/Scroll'
 
 import CartList from './childComps/CartList'
 import CartBottomBar from './childComps/CartBottomBar'
+import CartListDemo from './childComps/CartListDemo'
 
 import {mapGetters} from 'vuex' //这样导入vuex中的getters可以直接在计算属性中调用 getter的方法
 export default {
@@ -28,7 +30,10 @@ export default {
         NavBar,
         Scroll,
         CartList,
-        CartBottomBar
+        CartBottomBar,
+
+
+        CartListDemo
     },
     computed: {
         // cartLength(){
@@ -82,6 +87,6 @@ export default {
 }
 .content{
     height: calc(100% - 44px - 49px - 48px);
-    overflow: hidden;
+    overflow-y: hidden;
 }
 </style>

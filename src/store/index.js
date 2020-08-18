@@ -7,7 +7,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state:{
         cartList:[], //加入购物车的商品信息
-        // ischeckedAll:true
+        
     },
     mutations:{
         //这个addcart方法实现了两个功能 新增商品或者同样的商品数量+1
@@ -49,20 +49,34 @@ const store = new Vuex.Store({
                 payload.count++
             },
             addToCart(state,payload){
-                payload.checked=true
+                payload.checked=false
                 state.cartList.push(payload)
             },
             checkboxChange(state,payload){
-                payload.checked = ! payload.checked
+                    payload.checked = !payload.checked
             },
             checkboxChangeAll(state,payload){
-               console.log(payload);
-            }
+                if(payload.length>0){
+                    for(let i in payload){
+                        payload[i].checked = true
+                    }
+                }else{
+                    //console.log(state);
+                    for(let i in state.cartList){
+                        state.cartList[i].checked = false
+                    }
+                }
+                
+               
+                
+             }
+            
             
         
     },
     actions:{
         addCart(context,payload){
+           
             let product = context.state.cartList.find((item)=>{
                 return  item.iid === payload.iid  //返回唯一的id对应只有一个
             })
@@ -74,7 +88,8 @@ const store = new Vuex.Store({
                 context.commit('addToCart',payload)
             }
             
-        }
+        },
+        
     },
     getters:{
         cartLength(state){
@@ -83,10 +98,7 @@ const store = new Vuex.Store({
         cartList(state){
             return state.cartList
         },
-        // ischeckedALL(state){
-        //     if (state.cartList.length===0){return false}
-        //    else{return state.cartList.every(item=>item.checked==true) }         
-        // }
+        
         
         
     }

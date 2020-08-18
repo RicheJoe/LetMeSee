@@ -1,8 +1,8 @@
 <template> 
     <div class="bottom-bar">
-        <div class="item-selectorall">
+        <!-- <div class="item-selectorall">
             <el-checkbox  v-model='ischeckedALL'  @change="checkboxChangeAll()">全选</el-checkbox>
-        </div>
+        </div> -->
 
         <div class="totalPrice">
             合计：￥ {{totalPrice}}
@@ -22,7 +22,7 @@ export default {
     name:'CartBottomBar',
     data(){
       return {
-       
+          ischeckedALL:false
       }
     },
     computed:{
@@ -36,23 +36,31 @@ export default {
                 return pre+item.price * item.count
             },0).toFixed(2)
         },
-        checkedLength(){
+        checkedLength(){ //结算显示的数量
              return this.$store.state.cartList.filter(item=>{
                  return item.checked}).length
         },
-        ischeckedALL(){
-           
-                 if (this.$store.state.cartList.length===0){return false}
-                else{return this.$store.state.cartList.every(item=>item.checked==true) }  
-                 
-        }
+        // ischeckedALL_cupte(){
+        //          if (this.$store.state.cartList.length===0){return false}
+        //         else{return this.$store.state.cartList.every(item=>item.checked==true) }     
+        // }
         
         
     },
     methods:{
-        checkboxChangeAll(){
-            //this.$stologre.commit('checkboxChangeAll')
-        }
+        // checkboxChangeAll(){
+        //     // this.$store.commit('checkboxChangeAll',this.ischeckedALL)
+        //     // console.log(this.ischeckedALL);
+        //     if(this.ischeckedALL_cupte){
+        //         this.cartList.forEach(element => {
+        //             element.checked = false
+        //         });
+        //     }else{
+        //         this.cartList.forEach(element => {
+        //             element.checked = true
+        //         });
+        //     }
+        // }
     },
     
     
@@ -64,7 +72,7 @@ export default {
 .bottom-bar{
     height: 48px;
     position: relative;
-    background-color: rgb(214, 165, 158);
+    background-color: var(--color-tint);
     display: flex;
 }
 .item-selectorall {
@@ -72,20 +80,21 @@ export default {
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    color: #fff;
-   
+    align-items: center; 
   }
 .totalPrice{
-    width: 50%;
+    width: 70%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #fff;
+     background-color: var(--color-tint);
+
 
 }
 .calculate{
+    
     width: 30%;
     height: 100%;
     display: flex;
