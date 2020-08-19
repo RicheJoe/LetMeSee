@@ -14,12 +14,9 @@
             <div class="shopItem">
                 <img :src="scope.row.image" class="shopItem-img">
                 <div class="shop-right">
-                <div class="shopItem-title">{{scope.row.title}}</div>
-                <div class="shopItem-price">￥{{scope.row.price}} <span style="margin-left:44px">x</span>{{scope.row.count}}</div>
+                    <div class="shopItem-title">{{scope.row.title}}</div>
+                    <div class="shopItem-price">￥{{scope.row.price}} <span style="margin-left:44px">x</span>{{scope.row.count}}</div>
                 </div>
-                <!-- <span style="font-size: 12px;float:right;width:10%">x{{scope.row.count}}</span>
-                <p style="font-size: 10px;float:right;width:16%">￥ <br/>{{scope.row.price}}</p>
-                <span style="font-size: 12px;float:left;margin-left:70px;width:30%;height:68px;overflow:hidden">{{scope.row.title}}</span> -->
             </div>
         
         </template>
