@@ -125,4 +125,7 @@ export default {
 .shopItem-price{
     margin-left: 5px;
 }
+* {
+    touch-action: pan-y;
+}
 </style>
