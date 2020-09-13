@@ -1,5 +1,5 @@
 {
-  "name": "supermall_1",
+  "name": "supermall",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "better-scroll": "^1.15.2",
     "core-js": "^3.6.5",
+    "echarts": "^4.9.0",
     "element-ui": "^2.13.2",
     "fastclick": "^1.0.6",
     "json-serve": "^0.1.0",
