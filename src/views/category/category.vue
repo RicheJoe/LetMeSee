@@ -27,11 +27,14 @@
       </video>
       <!-- <video :src="fire[1]"></video> -->
     </div>
+    <collapse></collapse>
   </div>
 </template>
 
 <script>
 import childone from "./childComps/childone";
+import collapse from "../../components/common/collapse/collapse";
+
 import fs from "fs";
 import docx4js from "docx4js";
 import mammoth from "mammoth";
@@ -44,7 +47,8 @@ import { fire, fir2 } from "../../common/utils";
 export default {
   name: "category",
   components: {
-    childone
+    childone,
+    collapse
   },
   computed: {},
   data() {

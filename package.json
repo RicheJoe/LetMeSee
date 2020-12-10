@@ -31,6 +31,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.3",
     "@vue/cli-service": "^4.5.3",
+    "sass-loader": "^10.1.0",
     "vue-template-compiler": "^2.6.10",
     "vue2-collapse": "^1.0.15",
     "webpack": "^4.44.1",
