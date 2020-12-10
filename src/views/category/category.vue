@@ -12,6 +12,21 @@
     <button @click="getData">请求数据</button>
     <button @click="downloadFile">下载文件</button>
     <input type="file" @change="onChange2" />
+
+    <div class="video">
+      <video
+        id="myVideo"
+        class="video-js vjs-big-play-centered vjs-fluid video-box"
+        preload="auto"
+        muted
+        controls
+        width="100%"
+        height="560px"
+      >
+        <source type="video/mp4" src="" />
+      </video>
+      <!-- <video :src="fire[1]"></video> -->
+    </div>
   </div>
 </template>
 
@@ -22,6 +37,10 @@ import docx4js from "docx4js";
 import mammoth from "mammoth";
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
+
+import Videojs from "video.js";
+import { fire, fir2 } from "../../common/utils";
+
 export default {
   name: "category",
   components: {
@@ -36,11 +55,15 @@ export default {
         age: 12,
         height: 100
       },
-      resultws: {}
+      resultws: {},
+      fire: [fire, fir2]
     };
   },
   watch: {},
   methods: {
+    open_second: function () {
+      this.$refs.my_group.elements[1].open(); // opens second element
+    },
     downloadFile() {
       // var blob = new Blob(["Hello, world!"], {
       //   type: "text/plain;charset=utf-8"
@@ -152,11 +175,19 @@ export default {
     //   //do anything you want
     //   docx.save("./new.docx");
     // });
+    let id = document.querySelector("#myVideo");
+    Videojs(id).src(this.fire[0]);
   },
   props: {},
   destroyed() {}
 };
 </script>
 
-<style >
+<style scoped >
+.video {
+  width: 800px;
+  height: 450px;
+
+  background-color: rgb(209, 194, 194);
+}
 </style>
