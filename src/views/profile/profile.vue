@@ -19,38 +19,38 @@ export default {
   },
   watch: {},
   methods: {
-    Onchange(e) {
+    async Onchange(e) {
+      //xlsx插件用着读取
+      //这个exceljs用来写   好   ，当然也可以读取
       const Excel = require("exceljs");
       const fs = require("fs");
 
       console.log("change");
       let file = e.target.files[0];
       let filename = file.name;
-      console.log(file);
 
+      /*
+ npm install exceljs
+*/
+
+      const excelfile = "score.xlsx";
       var workbook = new Excel.Workbook();
-      workbook.xlsx.readFile(file);
-      //console.log(workbook);
-      // var workbook = new Excel.Workbook();
 
-      // workbook.xlsx.readFile(file).then(function () {
-      //   var worksheet = workbook.getWorksheet(1); //获取第一个worksheet
-
-      //   worksheet.eachRow(function (row, rowNumber) {
-      //     var rowSize = row.cellCount;
-      //     var numValues = row.actualCellCount;
-      //     //console.log("单元格数量/实际数量:"+rowSize+"/"+numValues);
-      //     // cell.type单元格类型：6-公式 ;2-数值；3-字符串
-      //     row.eachCell(function (cell, colNumber) {
-      //       if (cell.type == 6) {
-      //         var value = cell.result;
-      //       } else {
-      //         var value = cell.value;
-      //       }
-      //       console.log("Cell " + colNumber + " = " + cell.type + " " + value);
-      //     });
-      //   });
-      // });
+      workbook.xlsx.load(file).then(function() {
+        var worksheet = workbook.getWorksheet(1); //获取第一个worksheet
+        worksheet.eachRow(function(row, rowNumber) {
+          var rowSize = row.cellCount;
+          var numValues = row.actualCellCount; //console.log("单元格数量/实际数量:"+rowSize+"/"+numValues); // cell.type单元格类型：6-公式 ;2-数值；3-字符串
+          row.eachCell(function(cell, colNumber) {
+            if (cell.type == 6) {
+              var value = cell.result;
+            } else {
+              var value = cell.value;
+            }
+            console.log("Cell " + colNumber + " = " + cell.type + " " + value);
+          });
+        });
+      });
     }
   },
   mounted() {
@@ -117,7 +117,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .echarts {
   width: 100vw;
   height: 50vh;
