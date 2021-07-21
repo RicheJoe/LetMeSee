@@ -55,3 +55,129 @@ import fire from "../assets/test.mp4";
 import fir2 from "../assets/fire2.mp4";
 
 export { fire, fir2 };
+
+/**
+ *  树形结构格式化方法
+ * @param {*} items 需要树形格式化的数组
+ * @param {*} id   顶级对象的id 递归后是自己作为父级的id
+ * @param {*} link  父子之间的关系
+ */
+export function flatNest(items, id = -1, link = "parentId") {
+  let result = items
+    .filter(item => item[link] === id) //拿到所有的顶级对象放入数组中
+    .map(item => ({ ...item, children: flatNest(items, item.id) })); //每个顶级对象下放入自己的其他属性，children属性下则是 以当前数据的id为父id再去递归遍历
+
+  return result;
+}
+
+//可使用一下例子测试
+let testList = [
+  {
+    description: "",
+    iconUrl: "",
+    id: 25,
+    name: "测试部门",
+    parentId: -1,
+    sort: null,
+    userId: ""
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 13,
+    name: "武器装备组1",
+    parentId: 12,
+    sort: null,
+    userId: "10089"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 10,
+    name: "科研部门",
+    parentId: -1,
+    sort: null,
+    userId: "10159,10172"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 11,
+    name: "科研小组1",
+    parentId: 10,
+    sort: null,
+    userId: "10159"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 12,
+    name: "科研小组2",
+    parentId: 10,
+    sort: null,
+    userId: "10089"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 14,
+    name: "武器装备组2",
+    parentId: 12,
+    sort: null,
+    userId: "10089"
+  },
+  {
+    description: "liujf测试",
+    iconUrl: "",
+    id: 16,
+    name: "调研小组",
+    parentId: 18,
+    sort: null,
+    userId: "10097,10095"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 15,
+    name: "后勤部门",
+    parentId: -1,
+    sort: 2,
+    userId: "10095"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 17,
+    name: "审核小组",
+    parentId: -1,
+    sort: null,
+    userId: "10099"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 18,
+    name: "调研大组",
+    parentId: -1,
+    sort: null,
+    userId: "10095"
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 27,
+    name: "测试",
+    parentId: 26,
+    sort: null,
+    userId: ""
+  },
+  {
+    description: "",
+    iconUrl: "",
+    id: 26,
+    name: "测试小组",
+    parentId: 25,
+    sort: null,
+    userId: ""
+  }
+];

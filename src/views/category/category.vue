@@ -14,18 +14,7 @@
     <input type="file" @change="onChange2" />
 
     <div class="video">
-      <video
-        id="myVideo"
-        class="video-js vjs-big-play-centered vjs-fluid video-box"
-        preload="auto"
-        muted
-        controls
-        width="100%"
-        height="560px"
-      >
-        <source type="video/mp4" src="" />
-      </video>
-      <!-- <video :src="fire[1]"></video> -->
+      <video id="myVideo" class="video-js vjs-big-play-centered"></video>
     </div>
     <collapse></collapse>
   </div>
@@ -42,6 +31,9 @@ import FileSaver from "file-saver";
 import XLSX from "xlsx";
 
 import Videojs from "video.js";
+import "video.js/dist/video-js.css";
+import video_zhCN from "video.js/dist/lang/zh-CN.json";
+Videojs.addLanguage("zh-CN", video_zhCN); //设置播放器的语言
 import { fire, fir2 } from "../../common/utils";
 
 export default {
@@ -65,7 +57,7 @@ export default {
   },
   watch: {},
   methods: {
-    open_second: function () {
+    open_second: function() {
       this.$refs.my_group.elements[1].open(); // opens second element
     },
     downloadFile() {
@@ -84,7 +76,7 @@ export default {
     onChange2(e) {
       let file = e.target.files[0];
       var reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = function(e) {
         var data = e.target.result;
         let workbook = XLSX.read(data, { type: "binary" });
         let json1 = XLSX.utils.sheet_to_json(workbook.Sheets.Sheet1);
@@ -112,13 +104,13 @@ export default {
     onChange(e) {
       let file = e.target.files[0];
       var reader = new FileReader();
-      reader.onloadend = function (event) {
+      reader.onloadend = function(event) {
         var arrayBuffer = reader.result;
         console.log(arrayBuffer);
 
         mammoth
           .extractRawText({ arrayBuffer: arrayBuffer })
-          .then(function (resultObject) {
+          .then(function(resultObject) {
             // $result.innerHTML = resultObject.value
             console.log(resultObject.value);
           });
@@ -180,14 +172,40 @@ export default {
     //   docx.save("./new.docx");
     // });
     let id = document.querySelector("#myVideo");
-    Videojs(id).src(this.fire[0]);
+    let player = Videojs(
+      id,
+      {
+        autoplay: true,
+        controls: true,
+        height: 400,
+        sources: [
+          {
+            src: "https://www.runoob.com/try/demo_source/movie.mp4",
+            type: "video/mp4"
+          }
+        ]
+      },
+      function onPlayerReady() {
+        console.log("onPlayerReady", this);
+      }
+    );
+    player.on("playing", function() {
+      console.log("视频播放中");
+    });
+    player.on("ended", function() {
+      console.log("视频播放结束");
+    });
+    //切换
+    setTimeout(() => {
+      player.src("https://www.runoob.com/try/demo_source/mov_bbb.mp4");
+    }, 5000);
   },
   props: {},
   destroyed() {}
 };
 </script>
 
-<style scoped >
+<style scoped>
 .video {
   width: 800px;
   height: 450px;
