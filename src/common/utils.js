@@ -53,6 +53,7 @@ function padLeftZero(str) {
 
 import fire from "../assets/test.mp4";
 import fir2 from "../assets/fire2.mp4";
+import { resolve } from "core-js/fn/promise";
 
 export { fire, fir2 };
 
@@ -70,7 +71,7 @@ export function flatNest(items, id = -1, link = "parentId") {
   return result;
 }
 
-//可使用一下例子测试
+//可使用以下例子测试
 let testList = [
   {
     description: "",
@@ -181,3 +182,132 @@ let testList = [
     userId: ""
   }
 ];
+
+/**
+ *
+ * 使用Promise实现每隔1秒输出1,2,3
+ */
+let arr = [1, 2, 3];
+arr.reduce((a, p) => {
+  return a.then(() => {
+    return new Promise(r => {
+      setTimeout(() => r(console.log(p)), 1000);
+    });
+  });
+}, Promise.resolve());
+
+arr.reduce(
+  (cur, pre) =>
+    cur.then(
+      () =>
+        new Promise(res =>
+          setTimeout(() => {
+            res(console.log(pre));
+          }, 1000)
+        )
+    ),
+  Promise.resolve()
+);
+
+/**
+ * 使用Promise实现红绿灯交替重复亮
+红灯3秒亮一次，黄灯2秒亮一次，绿灯1秒亮一次；如何让三个灯不断交替重复亮灯？（用Promise实现）三个亮灯函数已经存在： 
+
+
+思路：
+
+包裹两层promise  外层执行完再进内层promise 实现异步 
+
+ */
+
+function red() {
+  console.log("red");
+}
+function green() {
+  console.log("green");
+}
+function yellow() {
+  console.log("yellow");
+}
+//按时间顺序执行的promise函数
+const light = function(timer, fn) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      fn();
+      resolve();
+    }, timer);
+  });
+};
+
+const step = function() {
+  Promise.resolve()
+    .then(() => light(3000, red))
+    .then(() => light(2000, yellow))
+    .then(() => light(1000, green));
+};
+
+//执行
+step();
+
+/**
+封装一个异步加载图片的方法
+这个相对简单一些，只需要在图片的onload函数中，使用resolve返回一下就可以了。 来看看具体代码：
+ * 
+ * 
+ */
+
+function loadImg(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = function() {
+      console.log("一张图片加载完成");
+      resolve(img);
+    };
+    img.onerror = function() {
+      reject(new Error("Could not load image at" + url));
+    };
+    img.src = url;
+  });
+}
+
+//拓展   限制异步操作的并发个数并尽可能快的完成全部  一次只能请求3个图片
+// 思路  将图片数组分为3个一组的二维数组  用promise.all 请求 结束后在下一组
+let imgUrls = [
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/AboutMe-painting1.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/AboutMe-painting2.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/AboutMe-painting3.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/AboutMe-painting4.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/AboutMe-painting5.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/bpmn6.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/bpmn7.png",
+  "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/bpmn8.png"
+];
+
+function limitLoad(list, limit, handler) {
+  //分割数组
+  const handleUrls = function() {
+    let newList = [];
+    let count = Math.ceil(list.length / limit);
+    for (let i = 0; i < count; i++) {
+      newList.push(list.slice(i * limit, (i + 1) * limit));
+    }
+    return newList;
+  };
+
+  let newList = handleUrls();
+  console.log(newList); //得到新的二维数组
+
+  const innerList = function(arr) {
+    //新二维数组执行加载方法
+    return arr.map(a => handler(a));
+  };
+
+  newList.forEach(i => {
+    //使用promise.all 令新数组每一项执行完毕后再执行下一个循环
+    Promise.all(innerList(i)).then(res => {
+      console.log(res);
+    });
+  });
+}
+
+limitLoad(imgUrls, 3, loadImg);
