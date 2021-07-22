@@ -1,3 +1,7 @@
+import fire from "../assets/test.mp4";
+import fir2 from "../assets/fire2.mp4";
+export { fire, fir2 };
+
 //防抖函数封装
 export function debounce(func, delay) {
   let timer = null;
@@ -50,12 +54,6 @@ export function formatDate(date, fmt) {
 function padLeftZero(str) {
   return ("00" + str).substr(str.length);
 }
-
-import fire from "../assets/test.mp4";
-import fir2 from "../assets/fire2.mp4";
-import { resolve } from "core-js/fn/promise";
-
-export { fire, fir2 };
 
 /**
  *  树形结构格式化方法
@@ -256,7 +254,7 @@ step();
  * 
  */
 
-function loadImg(url) {
+export function loadImg(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = function() {
@@ -283,8 +281,8 @@ let imgUrls = [
   "https://hexo-blog-1256114407.cos.ap-shenzhen-fsi.myqcloud.com/bpmn8.png"
 ];
 
-function limitLoad(list, limit, handler) {
-  //分割数组
+export function limitLoad(list, limit, handler) {
+  //分割数组  可用下方sliceArray方法
   const handleUrls = function() {
     let newList = [];
     let count = Math.ceil(list.length / limit);
@@ -311,3 +309,141 @@ function limitLoad(list, limit, handler) {
 }
 
 limitLoad(imgUrls, 3, loadImg);
+
+/**
+ *
+ * 返回以 size 为长度的数组分割的原数组
+ * 
+ * 
+ * Array.from(arrayLike,mapFn)
+ * arrayLike
+  想要转换成数组的伪数组对象或可迭代对象。
+  mapFn 可选
+  如果指定了该参数，新数组中的每个元素会执行该回调函数。
+ */
+
+export function sliceArray(arr, size = 3) {
+  let newArr = Array.from(
+    { length: Math.ceil(arr.length / size) },
+    (item, index) => arr.slice(index * size, (index + 1) * size)
+  );
+  return newArr;
+}
+
+/**
+ * 检查数组中某元素出现的次数
+ */
+
+export function countWhichOne(arr, value) {
+  return arr.reduce((p, c) => (c === value ? (p += 1) : p));
+}
+
+/**
+ * 统计数组中出现次数最多的元素
+ */
+export function countInArray(arr) {
+  let maxName,
+    maxNum = 0;
+  let obj = {};
+
+  arr.forEach(i => {
+    obj[i] ? (obj[i] += 1) : (obj[i] = 1);
+  });
+
+  for (let i in obj) {
+    if (obj[i] > maxNum) {
+      maxNum = obj[i];
+      maxName = i;
+    }
+  }
+  return `出现次数最多的元素为${maxName},出现次数为:${maxNum}次`;
+}
+
+/**
+ * 数组扁平化 即flat方法的实现
+ *   @describe 
+ *  Array.prototype.flat()
+    flat() 方法会按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新数组返回。 
+
+    @example
+    const arr1 = [0, 1, 2, [3, 4]];
+    arr1.flat()  //[0, 1, 2, 3, 4]
+
+    const arr2 = [0, 1, 2, [[[3, 4]]]];
+    arr2.flat(2)  //[0, 1, 2, [3, 4]]
+
+    const arr3 = [0, 1, 2, [[[3, 4]]]];
+    arr3.flat(Infinity)  //[0, 1, 2, [3, 4]] 
+ */
+let tempArr = [
+  1,
+  2,
+  3,
+  4,
+  [1, 2, 3, [1, 2, 3, [1, 2, 3]]],
+  5,
+  "XXX",
+  { name: "超级赛亚人" }
+];
+/**方法一   利用concat+递归
+ * 利用    Array.isArray 判断数组的某一项是不是数组  是的话再次递归展开
+ */
+export function myFlat1(arr) {
+  let result = [];
+  arr.forEach(item => {
+    if (Array.isArray(item)) result = result.concat(myFlat1(item));
+    else result.push(item);
+  });
+  return result;
+}
+
+/**方法二   利用concat+递归  但是使用reduce方法  代码更简洁
+ * 利用    Array.isArray 判断数组的某一项是不是数组  是的话再次递归展开
+ * @example
+ * arr.reduce((pre, cur) => pre.concat(cur), []);    这样可以展开一层  相当于flat（1）
+ */
+//特例
+function exampleFlat(arr) {
+  return arr.reduce((pre, cur) => pre.concat(cur), []);
+}
+
+/**
+ * @describe  reduce实现真正的flat(infinity)
+ *  分析：Array.isArray判断当前元素是否可再展开，如果可以就递归 不可以就放入结果数组内
+ */
+export function myFlat2(arr) {
+  return arr.reduce(
+    (pre, cur) => pre.concat(Array.isArray(cur) ? myFlat2(cur) : cur),
+    []
+  );
+}
+
+//注意以上两个flat方法扁平化是flat(infinity) 并不能和flat(n)一样控制展开的层级
+
+/**
+ *  进阶 实现真正的  Array.prototype.flat()
+ * @param {*} arr
+ * @param {*} num  要展开的层级   int类型整数
+ * @description
+ * 首先判断传入的num是否大于0   否则直接返回原数组
+ * 若大于0  则根据num展开 一次展开一级 num的值也相应减小一  知道num为0时候则表示展开完毕
+ *
+ * 注意：不要忘记reduce方法的初始值[]
+ */
+export function myFlat3(arr, num = Infinity) {
+  return num > 0
+    ? arr.reduce(
+        (pre, cur) =>
+          pre.concat(Array.isArray(cur) ? myFlat3(cur, num - 1) : cur),
+        []
+      )
+    : arr;
+}
+
+/**
+ *  对比两个数组并且返回其中不同的元素 或者相同的元素
+ */
+export function diffElement(arr1, arr2) {
+  return arr1.filter(a => !arr2.includes(a)); //不同
+  // return arr1.filter(a => arr2.includes(a)); // 相同
+}
