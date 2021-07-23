@@ -1,6 +1,7 @@
 import fire from "../assets/test.mp4";
 import fir2 from "../assets/fire2.mp4";
 export { fire, fir2 };
+import _ from "lodash";
 
 //防抖函数封装
 export function debounce(func, delay) {
@@ -447,3 +448,5 @@ export function diffElement(arr1, arr2) {
   return arr1.filter(a => !arr2.includes(a)); //不同
   // return arr1.filter(a => arr2.includes(a)); // 相同
 }
+
+console.log(_);
