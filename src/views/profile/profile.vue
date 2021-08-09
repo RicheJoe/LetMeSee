@@ -4,6 +4,12 @@
     <el-button type="success">成功按钮</el-button> -->
     <div class="echarts"></div>
     <input type="file" @change="Onchange" />
+
+    <div class="box">
+      <div class="left"></div>
+      <div class="right"></div>
+    </div>
+    <test-comp v-model="visible"></test-comp>
   </div>
 </template>
 
@@ -12,12 +18,15 @@ import ExceL from "exceljs";
 import fs from "file-saver";
 import echarts from "echarts";
 import _ from "lodash";
+import testComp from "./testComp.vue";
 export default {
   name: "profile",
-  components: {},
+  components: { testComp },
   computed: {},
   data() {
-    return {};
+    return {
+      visible: true
+    };
   },
   watch: {},
   methods: {
@@ -121,7 +130,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .echarts {
   width: 100vw;
   height: 50vh;
@@ -129,5 +138,23 @@ export default {
   margin-top: 12px;
 
   display: none;
+}
+
+.box {
+  height: 400px;
+  border: 1px solid #000;
+  display: flex;
+  div {
+    height: 100%;
+  }
+  .left {
+    background-color: rgb(129, 189, 230);
+    width: 100px;
+    float: left;
+  }
+  .right {
+    background-color: rgb(204, 233, 154);
+    flex: 1;
+  }
 }
 </style>
