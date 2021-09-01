@@ -17,6 +17,17 @@ export default {
     return {
       //因为在不是特定元素上使用v-model时，是不能直接更改父组件的数据的。
       // 所以当prop里的值更新之后，但是data里面的值并未更新,如果想要data里面的值也更新，可以写成计算属性，或者用watch监听更改   注意
+      /**
+       * //默认值，可省略
+              model:{
+                props:'value',
+                change:'input'
+              }
+              model:{
+                props:'checked',
+                change:'change'
+              }
+       */
       visible: this.value
     };
   },
