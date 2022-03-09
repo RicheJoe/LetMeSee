@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import tank from "../../assets/tank.mp4";
 import childone from "./childComps/childone";
 import collapse from "../../components/common/collapse/collapse";
 
@@ -108,12 +109,10 @@ export default {
         var arrayBuffer = reader.result;
         console.log(arrayBuffer);
 
-        mammoth
-          .extractRawText({ arrayBuffer: arrayBuffer })
-          .then(function(resultObject) {
-            // $result.innerHTML = resultObject.value
-            console.log(resultObject.value);
-          });
+        mammoth.extractRawText({ arrayBuffer: arrayBuffer }).then(function(resultObject) {
+          // $result.innerHTML = resultObject.value
+          console.log(resultObject.value);
+        });
       };
       reader.readAsArrayBuffer(file);
       // return new Promise(function (resolve, reject) {
@@ -180,7 +179,7 @@ export default {
         height: 400,
         sources: [
           {
-            src: "https://www.runoob.com/try/demo_source/movie.mp4",
+            src: tank,
             type: "video/mp4"
           }
         ]
@@ -197,7 +196,7 @@ export default {
     });
     //切换
     setTimeout(() => {
-      player.src("https://www.runoob.com/try/demo_source/mov_bbb.mp4");
+      // player.src("https://www.runoob.com/try/demo_source/mov_bbb.mp4");
     }, 5000);
   },
   props: {},

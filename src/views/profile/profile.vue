@@ -10,6 +10,7 @@
       <div class="right"></div>
     </div>
     <test-comp v-model="visible"></test-comp>
+    <div class="clock"></div>
   </div>
 </template>
 
@@ -19,6 +20,7 @@ import fs from "file-saver";
 import echarts from "echarts";
 import _ from "lodash";
 import testComp from "./testComp.vue";
+import FlipClock from "flipclock";
 export default {
   name: "profile",
   components: { testComp },
@@ -123,7 +125,20 @@ export default {
   },
   mounted() {
     //打乱数组
-    console.log(_.shuffle([1, 2, 3, 4]));
+    console.log(_.shuffle([1, 2, 3, 4]), FlipClock);
+    // var clock = new FlipClock(
+    //   document.querySelector(".your-clock"),
+    //   new Date().toLocaleDateString(),
+    //   {
+    //     clockFace: "MinuteCounter"
+    //   }
+    // );
+
+    const el = document.querySelector(".clock");
+
+    const clock = new FlipClock(el, new Date(), {
+      face: "TwelveHourClock"
+    });
   },
   props: {},
   destroyed() {}

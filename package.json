@@ -17,6 +17,7 @@
     "exceljs": "^4.1.1",
     "fastclick": "^1.0.6",
     "file-saver": "^2.0.2",
+    "flipclock": "^0.10.8",
     "fs": "0.0.1-security",
     "json-serve": "^0.1.0",
     "loadsh": "0.0.4",
