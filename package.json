@@ -33,12 +33,12 @@
     "xlsx": "^0.16.8"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.3",
-    "@vue/cli-service": "^4.5.3",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "sass-loader": "^10.1.0",
     "vue-template-compiler": "^2.6.10",
     "vue2-collapse": "^1.0.15",
-    "webpack": "^4.44.1",
+    "webpack": "^5.75.0",
     "webpack-dev-server": "^3.11.0"
   },
   "browserslist": [
